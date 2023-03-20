@@ -24,7 +24,7 @@ adc_map = [4 2 1 3]; %ADC map to subarray
 adc_ref = 4; %ADC reference channel
 
 %% Config Dev Platform
-uri = 'ip:192.168.1.211';
+uri = 'ip:192.168.3.10';
 
 fs_RxIQ = 250e6; %I/Q Data Rate in MSPS
 
@@ -44,30 +44,30 @@ rx.setRegister(hex2dec('61'),'283'); %Fine DDC Control, bypass fine NCO
 % Setup ADAR1000EVAL1Z in RX Mode
 sray = adi.Stingray;
 sray.uri = uri;
-sray.Frequency = 10e9;
+% sray.Frequency = 10e9;
 sray.Mode(:) = {'Rx'}; %set mode, 'Rx', 'Tx, 'Disabled'
 sray.RxAttn(:) = 1; %1: Attenuation Off, 0: Attenuation On
-sray.SteerRx(0,0); %Broadside
+% sray.SteerRx(0,0); %Broadside
 sray.RxGain(:) = 127; %127: Highest Gain, 0: Lowest Gain, Decimal Value
 sray.LatchRxSettings; %Latch SPI settings to devices
 sray(); %constructor to write properties to hardware
 
-%Setup ADXUD1AEBZ, %Rx High Gain Mode
-sray.TXRX0        = 0; %0: RX, 1: TX
-sray.TXRX1        = 0;
-sray.TXRX2        = 0;
-sray.TXRX3        = 0;
-sray.RxGainMode   = 1; %0: Low Gain, 1: High Gain - RX Mode only
-sray.ADF4371Frequency = 14.5e9; %program if using on-board LO PLL
-sray.PllOutputSel = 1; %1: ADF4371 RF1 (8 GHz to 16 GHz), 0: ADF4371 RF2 (16 GHz to 32 GHz)
+% %Setup ADXUD1AEBZ, %Rx High Gain Mode
+% sray.TXRX0        = 0; %0: RX, 1: TX
+% sray.TXRX1        = 0;
+% sray.TXRX2        = 0;
+% sray.TXRX3        = 0;
+% sray.RxGainMode   = 1; %0: Low Gain, 1: High Gain - RX Mode only
+% sray.ADF4371Frequency = 14.5e9; %program if using on-board LO PLL
+% sray.PllOutputSel = 1; %1: ADF4371 RF1 (8 GHz to 16 GHz), 0: ADF4371 RF2 (16 GHz to 32 GHz)
 
-sray.ArrayMap; %Channel Array Map for ADAR1000EVAL1Z. sray.ArrayMap(1) returns channel 2.
+% sray.ArrayMap; %Channel Array Map for ADAR1000EVAL1Z. sray.ArrayMap(1) returns channel 2.
 
 sray.RxPowerDown(:) = true; %True: Enable RX Channels
 
 data = rx(); %capture data from ADCs, 4096x4 matrix
 
-sray.RxPowerDown(:) = false; %Power off all Rx channels
+%sray.RxPowerDown(:) = false; %Power off all Rx channels
 
 combinedComplexData = sum(data,2); %complex addition for all 4 ADCs
 
